@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>File Upload</title>
+<style>
+  body { font-family: Arial, sans-serif; }
+  .upload-container { margin: 20px; }
+  .button { margin-top: 10px; }
+</style>
+</head>
+<body>
+<div class="upload-container">
+  <input type="file" id="fileInput">
+  <button class="button" onclick="uploadFile()">Upload</button>
+  <p id="fileLink"></p>
+</div>
+
+<script>
+function uploadFile() {
+  var fileInput = document.getElementById('fileInput');
+  var file = fileInput.files[0];
+  var formData = new FormData();
+  formData.append('file', file);
+
+  fetch('/upload', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if(data.fileUrl) {
+      document.getElementById('fileLink').innerHTML = '<a href="' + data.fileUrl + '" target="_blank">Access File</a>';
+    }
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+}
+</script>
+</body>
+</html>
